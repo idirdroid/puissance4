@@ -22,8 +22,8 @@ public class Main {
         //player = initUser(scan);
 
         //Déclaration du tableau, possibilité de modifier sa taille
-        int largeur = 17;
-        int hauteur = 10;
+        int largeur = 7;
+        int hauteur = 6;
         String [][] game = new String [hauteur][largeur];
 
         int choice;
