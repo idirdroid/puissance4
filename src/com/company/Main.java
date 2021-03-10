@@ -13,37 +13,36 @@ public class Main {
 
 
     public static void main(String[] args) {
-        // write your code here
 
+        //initialisation du scanner
         Scanner scan = new Scanner(System.in);
-
+        //
         int player = 1;
-
-        //player = initUser(scan);
 
         //Déclaration du tableau, possibilité de modifier sa taille
         int largeur = 7;
         int hauteur = 6;
         String [][] game = new String [hauteur][largeur];
 
+        //Varaible contenant le choix du joueur
         int choice;
+        //Variable contenant le nom du joueur
         String playerTurn = "Joueur 1";
+        //Boolean contenant le résultat du jeu
         boolean gain = false;
 
         do {
-            //Instructions
+            //Affichage du tableau
             printGame(game, largeur);
-
+            //Relevé du choix du joueur avec contôle de saisie
             choice = userChoise(scan, playerTurn, largeur);
-            //System.out.println("Choix de l'Utilisateur: " + choice);
 
-            //Enregistrer le jeu de l'utilisateur
+            //Enregistrement du jeu de l'utilisateur
             boolean recorded = recordGame(player, choice, game);
 
+            //Si le jeu a pu être enregistré, on contrôle le résultat et on passe au joueur suivant
             if (recorded) {
                 gain = checkGame(game, choice, player);
-                //lastPlayer = playerTurn;
-                System.out.println("Valeur Bool Gain: " + gain);
                 if(!gain) {
                     if (playerTurn == "Joueur 1" && recorded) {
                         playerTurn = "Joueur 2";
@@ -57,6 +56,7 @@ public class Main {
 
         } while (!gain && !fullGrid(game));
 
+        //Affichage de la fin du jeu selon les cas (victoire ou grille pleine)
         if(gain){
             System.out.println("*************************" );
             System.out.println("*************************" );
@@ -77,13 +77,10 @@ public class Main {
     }
 
     private static boolean checkGame(String[][] game, int column, int player) {
-        //Fonction de test de la grille
+        //Fonction de test de la grille (ligne, colonnes et diagonales)
         boolean check = false;
         //Stockage de la ligne courante du dernier jeton joué
         int line = 0;
-
-
-        //System.out.println("Position du jeton : " + position);
 
         //Recherche de la position du jeton
         //line représente la ligne du dernier jeton joué
@@ -95,10 +92,13 @@ public class Main {
             }
         }
 
+        //******************************************
         //Test de la ligne
+        //******************************************
         int compteurLine =0;
-        //System.out.println("Position: " + line);
-        for(int i=0; i<game[line].length; i++){
+
+        //On test la valeur du compteur "compteurLine" pour tenir compte des cases vides sur la ligne
+        for(int i=0; (i<game[line].length) && compteurLine<4; i++){
             if(game[line][i] != null) {
                 if (Integer.parseInt(game[line][i]) == player) {
                     compteurLine++;
@@ -110,14 +110,15 @@ public class Main {
                 compteurLine = 0;
             }
         }
-        //System.out.println("Compteur : " + compteurLine);
+        System.out.println("Compteur ligne: " + compteurLine + " de la ligne: " +line + "Joueur : " + player);
         if (compteurLine >= 4){
             check = true;
         }
 
+        //******************************************
         //Test de la colonne
+        //******************************************
         int compteurCol =0;
-        //System.out.println("Position: " + line);
 
         for(int j=0; j<game.length; j++){
             if(game[j][column] != null) {
@@ -128,24 +129,24 @@ public class Main {
                 }
             }
         }
-        //System.out.println("Compteur Colonne : " + compteurCol);
         if (compteurCol >= 4){
             check = true;
         }
 
         //******************************************
-        //Test des diagonales (4 tests à faire)
+        //Test des diagonales (2 tests à faire)
         //******************************************
         int compteurDiag = 1;
 
-        //test vers bas gauche et haut droit
-        //On commence par bas gauche
+        //******************************************
+        //test vers bas gauche et haut droite
+        //******************************************
         int line_temp = line + 1;
         int column_temp = column -1;
 
         while((line_temp<=game.length -1) && (column_temp>=0) && game[line_temp][column_temp] != null)
         {
-            System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
+            //System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
             if(Integer.parseInt(game[line_temp][column_temp]) == player){
                 compteurDiag++;
             }
@@ -156,20 +157,17 @@ public class Main {
             column_temp--;
         }
 
-        System.out.println("Compteur Diag Bas - Gauche : " + compteurDiag);
         if (compteurDiag >= 4){
             check = true;
         }
 
         //On continue avec haut droite
-        //Test vers haut droite
-        //compteurDiag =1;
         line_temp = line - 1;
         column_temp = column + 1;
 
         while((line_temp>=0) && (column_temp<=game[0].length -1) && game[line_temp][column_temp] != null)
         {
-            System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
+            //System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
             if(Integer.parseInt(game[line_temp][column_temp]) == player){
                 compteurDiag++;
             }
@@ -180,12 +178,13 @@ public class Main {
             column_temp++;
         }
 
-        System.out.println("Compteur Diag haut - droite : " + compteurDiag);
         if (compteurDiag >= 4){
             check = true;
         }
 
-        //Deuxieme diagonale a tester
+        //**************************************************
+        //Deuxieme diagonale vers bas droite et haut gauche
+        //**************************************************
         //Test vers bas droite
         compteurDiag =1;
         line_temp = line + 1;
@@ -193,7 +192,7 @@ public class Main {
 
         while((line_temp<=game.length -1) && (column_temp<=game[0].length -1) && game[line_temp][column_temp] != null)
         {
-            System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
+            //System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
             if(Integer.parseInt(game[line_temp][column_temp]) == player){
                 compteurDiag++;
             }
@@ -204,21 +203,18 @@ public class Main {
             column_temp++;
         }
 
-        System.out.println("Compteur Diag Bas - droite : " + compteurDiag);
         if (compteurDiag >= 4){
             check = true;
         }
 
         //on enchaine avec l'autre côté de la diagonale
         //Test vers haut gauche
-
         line_temp = line - 1;
         column_temp = column - 1;
 
-
         while((line_temp>=0) && (column_temp>=0) && game[line_temp][column_temp] != null)
         {
-            System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
+            //System.out.println(player + " On entre dans la boucle avec  " + line_temp + " | " + column_temp + "Compteur: " + compteurDiag);
             if(Integer.parseInt(game[line_temp][column_temp]) == player){
                 compteurDiag++;
             }
@@ -229,7 +225,6 @@ public class Main {
             column_temp--;
         }
 
-        System.out.println("Compteur Diag haut - gauche : " + compteurDiag);
         if (compteurDiag >= 4){
             check = true;
         }
@@ -241,7 +236,7 @@ public class Main {
 
     private static boolean fullGrid(String[][] grid) {
         boolean test = true;
-        //Boucle test grille pleine
+        //Parcours de la grille pour tester le contenu des cases
         for (int i=0; i< grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 if(grid[i][j] == null){
@@ -255,6 +250,7 @@ public class Main {
     private static boolean recordGame(int player, int choice, String [][] game) {
         //Varaible boolean qui permet de renvoyer la validation du jeu de l'utilisateur
         boolean recorded = false;
+        //On enregistre le jeu du joueur seulement si la colenne n'est pas pleine
         for(int i=game.length-1; i>=0; i--){
             if(game[i][choice] == null){
                 game[i][choice] = Integer.toString(player);
@@ -272,11 +268,12 @@ public class Main {
     private static int userChoise(Scanner scan, String playerTurn, int largeur) {
         boolean check = false;
         int userInput = 0;
+        //Test de la saisie de l'utilisateur
         do {
             System.out.println(playerTurn + ", Choisissez une colonne: ");
             try{
                 userInput = scan.nextInt();
-
+                //Test de saisie de nombre entre 1 et "largeur dynamique"
                 if((userInput<1) || (userInput>largeur)){
                 System.err.println(playerTurn + ", Merci de saisir un nombre entre 1 et " + largeur);
                 check = false;
@@ -285,6 +282,7 @@ public class Main {
                     check = true;
                 }
             } catch (InputMismatchException e){
+                //Interception d'un saisie non entière
                 check = false;
                 scan.nextLine();
                 System.err.println(playerTurn + ", La saisie " + userInput + " n'est pas une nombre entre 1 et " + largeur);
@@ -297,25 +295,26 @@ public class Main {
     }
 
     private static void printGame(String [][] game, int largeur) {
-        //Affichage entête
+        //Affichage entête varaible selon la taille du tableau
         for(int i=0; i<largeur; i++){
-            System.out.print("-----");
+            System.out.print("----");
         }
         System.out.println("");
 
+        //Affichage des numéros de colonne
         System.out.print("|");
-
         for (int i=1; i< (game[0].length)+1; i++){
             System.out.print(" " + i + " |");
         }
-
+        //Affichage d'une séparation
         System.out.println("");
         for(int i=0; i<largeur; i++){
-            System.out.print("-----");
+            System.out.print("----");
         }
         System.out.println("");
+        //Fin de l'entête
 
-        //Affichage du tableau
+        //Affichage du contenu du tableau
         for (int i=0; i< game.length; i++){
             System.out.print("| ");
             for(int j=0; j< game[i].length; j++){
@@ -329,18 +328,15 @@ public class Main {
                             System.out.print(ANSI_RED + "X" +  ANSI_RESET + " | "); break;
                         case "2" :
                             System.out.print(ANSI_YELLOW + "O" + ANSI_RESET + " | "); break;
-
                     }
-                    //System.out.print(game[i][j] + " | ");
                 }
             }
             System.out.print("\n");
         }
 
-        //Affichage footer
-
+        //Affichage bas de tableau
         for(int i=0; i<largeur; i++){
-            System.out.print("-----");
+            System.out.print("----");
         }
         System.out.println("");
     }
