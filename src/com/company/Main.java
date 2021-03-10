@@ -110,7 +110,6 @@ public class Main {
                 compteurLine = 0;
             }
         }
-        System.out.println("Compteur ligne: " + compteurLine + " de la ligne: " +line + "Joueur : " + player);
         if (compteurLine >= 4){
             check = true;
         }
